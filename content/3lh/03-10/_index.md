@@ -4,7 +4,7 @@ date: 2020-12-14T17:26:13-08:00
 draft: false
 ---
 
-{{% children  %}}
+{{% children  %}}{{% /children %}}
 
 # 菩提道次第广论
 

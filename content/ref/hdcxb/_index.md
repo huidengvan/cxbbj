@@ -10,4 +10,4 @@ draft: false
 
 {{< audiotag id="id2" url="https://mrs.huidengzhiguang.com/mp3/va/2020/U20014_DaMoWuXingLun10.mp3" title="《达摩悟性论》10" playpos="800" >}}
 
-{{% children style="h2" depth="4" %}}
+{{% children style="h2" depth="4" %}}{{% /children %}}

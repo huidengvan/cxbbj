@@ -5,7 +5,7 @@ draft: false
 tags: ["因果不虚", "四加行"]
 ---
 
-{{% children style="h2" depth="4" %}}
+{{% children style="h2" depth="4" %}} {{% /children %}}
 
 - [佛經地獄因果圖鑑第 1 冊.pdf](https://hdvblob.blob.core.windows.net/hdv/yyg/佛經地獄因果圖鑑第1冊.pdf)
 - [佛經地獄因果圖鑑第 2 冊.pdf](https://hdvblob.blob.core.windows.net/hdv/yyg/佛經地獄因果圖鑑第2冊.pdf)

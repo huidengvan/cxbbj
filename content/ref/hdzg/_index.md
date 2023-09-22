@@ -5,7 +5,7 @@ draft: false
 tags: ["慧灯之光"]
 ---
 
-{{% children style="h2" depth="4" %}}
+{{% children style="h2" depth="4" %}}{{% /children %}}
 
 - **[慧灯之光一](1)**
   - **三个差别**

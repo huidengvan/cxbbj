@@ -5,4 +5,4 @@ draft: false
 chapter: true
 ---
 
-{{% children  %}}
+{{% children  %}}{{% /children %}}

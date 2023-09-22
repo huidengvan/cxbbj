@@ -1,7 +1,7 @@
 baseURL = "https://bj.cxb123.cc/"
 languageCode = "en-us"
 title = "禅修班笔记(仅供参考请勿转发)"
-theme = "docport"
+theme = ["docport"]
 disableToc = "false"
 hasCJKLanguage = "true"
 

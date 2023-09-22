@@ -5,6 +5,6 @@ draft: false
 ---
 
 
-{{% children style="h2" depth="4" %}}
+{{% children style="h2" depth="4" %}}{{% /children %}}
 
 

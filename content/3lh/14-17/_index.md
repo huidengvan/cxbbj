@@ -12,4 +12,4 @@ draft: false
 - 出离心
 - 菩提心
 
-{{% children style="h2" depth="4" %}}
+{{% children style="h2" depth="4" %}} {{% /children %}}

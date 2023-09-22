@@ -5,4 +5,4 @@ chapter: true
 
 # 十圆满
 
-{{% children %}}
+{{% children %}}{{% /children %}}

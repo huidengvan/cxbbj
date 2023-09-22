@@ -5,4 +5,4 @@ chapter: true
 
 # 断缘心
 
-{{% children style="h2" depth="1" %}}
+{{% children style="h2" depth="1" %}}{{% /children %}}
