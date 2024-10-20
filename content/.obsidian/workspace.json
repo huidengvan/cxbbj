@@ -14,12 +14,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "cxb/3/02-2 慧灯禅修课3 人身难得2.srt.md",
+                "file": "note/01xmnd.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "02-2 慧灯禅修课3 人身难得2.srt"
+              "title": "01xmnd"
             },
             "group": "4854de9f1fd1e7b3"
           }
@@ -36,10 +36,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "cxb/3/02-2 慧灯禅修课3 人身难得2.srt.md"
+                "file": "note/01xmnd.md"
               },
               "icon": "lucide-list",
-              "title": "Outline of 02-2 慧灯禅修课3 人身难得2.srt"
+              "title": "Outline of 01xmnd"
             },
             "group": "4854de9f1fd1e7b3"
           }
@@ -186,26 +186,41 @@
   },
   "active": "5170b9624c585dd7",
   "lastOpenFiles": [
-    "cxb/3/02-1 慧灯禅修课2 人身难得1.srt.md",
-    "cxb/3/01 慧灯禅修课1 入坐与出坐.srt.md",
-    "ref/other/fwansrcth.md",
-    "ref/other/fzx37.md",
-    "ref/other/解脱庄严宝论.pdf",
-    "ref/other/瑜伽菩萨戒本.md",
-    "ref/other/zzrm.md",
-    "ref/other/zjl.md",
-    "ref/other/ss50slj.md",
-    "ref/other/jyhj.md",
-    "ref/other/fotuo.md",
-    "ref/jsl/2.md",
-    "ref/jsl/1.md",
-    "ref/jsl/0.md",
-    "cxb/3/03-3 慧灯禅修课8 寿命无常3.srt.md",
-    "cxb/3/03-2 慧灯禅修课7 寿命无常2.srt.md",
-    "cxb/3/03-1 慧灯禅修课6 寿命无常1.srt.md",
-    "cxb/3/02-4 慧灯禅修课5 人身难得4.srt.md",
+    "1xm/1-ba-wu-xia/1.8-yin-ya/_index.md",
+    "1xm/1-ba-wu-xia/1.7-fo-bu-chu-shi/_index.md",
+    "1xm/1-ba-wu-xia/1.6-xie-jian/_index.md",
+    "1xm/1-ba-wu-xia/1.5-chang-shou-tian/_index.md",
+    "1xm/1-ba-wu-xia/1.4-bian-di/_index.md",
+    "1xm/1-ba-wu-xia/1.3-pang-sheng/_index.md",
+    "1xm/1-ba-wu-xia/1.2-e-gui/_index.md",
+    "1xm/1-ba-wu-xia/1.1-di-yu/_index.md",
+    "1xm/1-ba-wu-xia/08-yinya.md",
+    "1xm/1-ba-wu-xia/1.8-yin-ya/08-yinya.md",
+    "1xm/1-ba-wu-xia/07-fbcs.md",
+    "1xm/1-ba-wu-xia/1.7-fo-bu-chu-shi/07-fbcs.md",
+    "1xm/1-ba-wu-xia/06-xiejn.md",
+    "1xm/1-ba-wu-xia/1.6-xie-jian/06-xiejn.md",
+    "1xm/1-ba-wu-xia/05-chsht.md",
+    "1xm/1-ba-wu-xia/1.5-chang-shou-tian/05-chsht.md",
+    "1xm/1-ba-wu-xia/04-bndi.md",
+    "1xm/1-ba-wu-xia/1.4-bian-di/04-bndi.md",
+    "1xm/1-ba-wu-xia/03-pngsh.md",
+    "1xm/1-ba-wu-xia/1.3-pang-sheng/03-pngsh.md",
+    "1xm/1-ba-wu-xia/02-egui.md",
+    "1xm/1-ba-wu-xia/1.2-e-gui/02-egui.md",
+    "1xm/1-ba-wu-xia/01-diyu.md",
+    "1xm/1-ba-wu-xia/1.1-di-yu/01-diyu.md",
     "cxb/3/02-2 慧灯禅修课3 人身难得2.srt.md",
-    "cxb/3/00 慧灯禅修课 介绍慧灯禅修.srt.md",
-    "cxb/3/_index.md"
+    "note/01xmnd.md",
+    "note",
+    "cxb/subtitle/佛法见修/菩提心/06 菩提心的修法(20120331).srt",
+    "cxb/subtitle/佛法见修/菩提心/07 菩提心的修法(2010).srt",
+    "cxb/subtitle/佛法见修/菩提心/05 菩提心的修法（下）(20120314).srt",
+    "cxb/subtitle/佛法见修/菩提心/07 菩提心的修法(2010).srt.fd9efaf1.partial",
+    "cxb/subtitle/佛法见修/菩提心/06 菩提心的修法(20120331).srt.a3c21b6a.partial",
+    "cxb/subtitle/佛法见修/菩提心/05 菩提心的修法（下）(20120314).srt.60a67681.partial",
+    "cxb/subtitle/佛法见修/菩提心/04 菩提心的修法（上）(20120313).srt",
+    "cxb/subtitle/佛法见修/菩提心/02 菩提心的修法(2011).srt",
+    "cxb/subtitle/佛法见修/菩提心/03 大圆满前行-菩提心的修法.srt"
   ]
 }
