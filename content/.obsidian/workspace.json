@@ -1,0 +1,210 @@
+{
+  "main": {
+    "id": "751587ebc6924ff4",
+    "type": "split",
+    "children": [
+      {
+        "id": "fdb3521c1567cfc4",
+        "type": "tabs",
+        "dimension": 75,
+        "children": [
+          {
+            "id": "5170b9624c585dd7",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "ref/other/fwansrcth.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "fwansrcth"
+            },
+            "group": "4854de9f1fd1e7b3"
+          }
+        ]
+      },
+      {
+        "id": "bb4eeab8cf8b1867",
+        "type": "tabs",
+        "dimension": 25,
+        "children": [
+          {
+            "id": "87badb9c307f2fae",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "ref/other/fwansrcth.md"
+              },
+              "icon": "lucide-list",
+              "title": "Outline of fwansrcth"
+            },
+            "group": "4854de9f1fd1e7b3"
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "a6baec25dbc9bb86",
+    "type": "split",
+    "children": [
+      {
+        "id": "df5be9e1d429aa05",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "4d3c871dffd7d685",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "0d5b224ae0862f65",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "4ff062f3e0f2b370",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "d62ce6235d897c0f",
+    "type": "split",
+    "children": [
+      {
+        "id": "f4c7eba5458b276f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "955187385943b361",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "cxb/3/02-1 慧灯禅修课2 人身难得1.srt.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for 02-1 慧灯禅修课2 人身难得1.srt"
+            }
+          },
+          {
+            "id": "130b2903095aaaa9",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "cxb/3/02-1 慧灯禅修课2 人身难得1.srt.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from 02-1 慧灯禅修课2 人身难得1.srt"
+            }
+          },
+          {
+            "id": "2fdb0485ca34377b",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "98f81631d2c14fdf",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "cxb/3/02-1 慧灯禅修课2 人身难得1.srt.md"
+              },
+              "icon": "lucide-list",
+              "title": "Outline of 02-1 慧灯禅修课2 人身难得1.srt"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "5170b9624c585dd7",
+  "lastOpenFiles": [
+    "ref/other/fzx37.md",
+    "ref/other/解脱庄严宝论.pdf",
+    "ref/other/瑜伽菩萨戒本.md",
+    "ref/other/zzrm.md",
+    "ref/other/zjl.md",
+    "ref/other/ss50slj.md",
+    "ref/other/jyhj.md",
+    "ref/other/fotuo.md",
+    "ref/jsl/2.md",
+    "ref/jsl/1.md",
+    "ref/jsl/0.md",
+    "cxb/3/03-3 慧灯禅修课8 寿命无常3.srt.md",
+    "cxb/3/03-2 慧灯禅修课7 寿命无常2.srt.md",
+    "cxb/3/03-1 慧灯禅修课6 寿命无常1.srt.md",
+    "cxb/3/02-4 慧灯禅修课5 人身难得4.srt.md",
+    "cxb/3/02-2 慧灯禅修课3 人身难得2.srt.md",
+    "cxb/3/01 慧灯禅修课1 入坐与出坐.srt.md",
+    "cxb/3/00 慧灯禅修课 介绍慧灯禅修.srt.md",
+    "cxb/3/_index.md",
+    "cxb/3/02-1 慧灯禅修课2 人身难得1.srt.md"
+  ]
+}
