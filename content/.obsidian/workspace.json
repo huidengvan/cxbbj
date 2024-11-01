@@ -14,12 +14,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "note/01xmnd.md",
+                "file": "cxb/3/02-1 慧灯禅修课2 人身难得1.srt.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "01xmnd"
+              "title": "02-1 慧灯禅修课2 人身难得1.srt"
             },
             "group": "4854de9f1fd1e7b3"
           }
@@ -36,10 +36,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "note/01xmnd.md"
+                "file": "cxb/3/02-1 慧灯禅修课2 人身难得1.srt.md"
               },
               "icon": "lucide-list",
-              "title": "Outline of 01xmnd"
+              "title": "Outline of 02-1 慧灯禅修课2 人身难得1.srt"
             },
             "group": "4854de9f1fd1e7b3"
           }
@@ -186,6 +186,7 @@
   },
   "active": "5170b9624c585dd7",
   "lastOpenFiles": [
+    "note/01xmnd.md",
     "1xm/1-ba-wu-xia/1.8-yin-ya/_index.md",
     "1xm/1-ba-wu-xia/1.7-fo-bu-chu-shi/_index.md",
     "1xm/1-ba-wu-xia/1.6-xie-jian/_index.md",
@@ -211,7 +212,6 @@
     "1xm/1-ba-wu-xia/01-diyu.md",
     "1xm/1-ba-wu-xia/1.1-di-yu/01-diyu.md",
     "cxb/3/02-2 慧灯禅修课3 人身难得2.srt.md",
-    "note/01xmnd.md",
     "note",
     "cxb/subtitle/佛法见修/菩提心/06 菩提心的修法(20120331).srt",
     "cxb/subtitle/佛法见修/菩提心/07 菩提心的修法(2010).srt",
