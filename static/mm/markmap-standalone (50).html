@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markmap Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #1e1e1e;
+            color: #e0e0e0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: #252525;
+            padding: 15px 20px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #0052a3;
+        }
+
+        .btn-secondary {
+            background: #444;
+        }
+
+        .btn-secondary:hover {
+            background: #555;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .editor-panel {
+            width: 40%;
+            background: #252525;
+            border-right: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease, width 0.3s ease;
+            position: relative;
+        }
+
+        .editor-panel.collapsed {
+            margin-left: calc(-40% + 30px);
+            border-right: none;
+        }
+
+        .editor-header {
+            padding: 12px 20px;
+            border-bottom: 1px solid #333;
+            font-weight: 500;
+        }
+
+        textarea {
+            flex: 1;
+            background: #1e1e1e;
+            color: #e0e0e0;
+            border: none;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+        }
+
+        .viewer-panel {
+            flex: 1;
+            position: relative;
+            background: #1e1e1e;
+        }
+
+        #markmap {
+            width: 100%;
+            height: 100%;
+        }
+
+        .shortcuts {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(37, 37, 37, 0.95);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            max-width: 250px;
+            display: none;
+            z-index: 1000;
+            border: 1px solid #444;
+        }
+
+        .shortcuts.active {
+            display: block;
+        }
+
+        .shortcuts h3 {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .shortcuts ul {
+            list-style: none;
+        }
+
+        .shortcuts li {
+            padding: 4px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .key {
+            background: #333;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
+        .toolbar {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(37, 37, 37, 0.95);
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: flex;
+            gap: 10px;
+            border: 1px solid #444;
+            flex-wrap: wrap;
+            max-width: 90%;
+            justify-content: center;
+        }
+
+        .toolbar button {
+            background: #333;
+            color: #e0e0e0;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .toolbar button:hover {
+            background: #444;
+        }
+
+        .focus-hint {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(37, 37, 37, 0.95);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            border: 1px solid #444;
+            color: #aaa;
+        }
+
+        .focus-hint strong {
+            color: #0066cc;
+        }
+
+        .zoom-icon {
+            cursor: pointer;
+            fill: #666;
+            transition: fill 0.2s;
+        }
+
+        .zoom-icon:hover {
+            fill: #0066cc;
+        }
+
+        .zoom-icon-clickable {
+            cursor: pointer;
+        }
+
+        .toggle-panel-btn {
+            position: absolute;
+            top: 50%;
+            right: -30px;
+            transform: translateY(-50%);
+            background: #252525;
+            border: 1px solid #333;
+            border-left: none;
+            color: #e0e0e0;
+            width: 30px;
+            height: 60px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0 8px 8px 0;
+            transition: background 0.2s;
+            z-index: 100;
+            font-size: 18px;
+        }
+
+        .toggle-panel-btn:hover {
+            background: #333;
+        }
+
+        .editor-panel.collapsed .toggle-panel-btn {
+            border-left: 1px solid #333;
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🗺️ Markmap Viewer</h1>
+        <div class="controls">
+            <button class="btn" onclick="updateMarkmap()">Update Map</button>
+            <button class="btn btn-secondary" onclick="toggleShortcuts()">Shortcuts</button>
+            <button class="btn btn-secondary" onclick="exportSVG()">Export SVG</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="editor-panel" id="editor-panel">
+            <button class="toggle-panel-btn" id="toggle-panel-btn" onclick="toggleEditorPanel()" title="Toggle Editor Panel">
+                ◀
+            </button>
+            <div class="editor-header">Markdown Input</div>
+            <textarea id="markdown-input" placeholder="Enter your markdown here...
+Example:
+# Main Topic
+## Subtopic 1
+- Point 1
+- Point 2
+## Subtopic 2
+- Point A
+- Point B
+"># Project Planning
+## Phase 1: Research
+- Market Analysis
+- Competitor Research
+- User Interviews
+## Phase 2: Design
+- Wireframes
+- Mockups
+- Prototypes
+## Phase 3: Development
+- Frontend
+  - React Components
+  - State Management
+- Backend
+  - API Design
+  - Database Schema
+## Phase 4: Testing
+- Unit Tests
+- Integration Tests
+- User Acceptance Testing
+## Phase 5: Launch
+- Deployment
+- Marketing Campaign
+- User Onboarding</textarea>
+        </div>
+
+        <div class="viewer-panel">
+            <div class="loading" id="loading">Loading Markmap...</div>
+            <svg id="markmap"></svg>
+            
+            <div class="focus-hint">
+                Click the <strong>🔍+</strong> icon to focus on any node<br>
+                <strong>1-7 keys</strong> expand relative to current view
+            </div>
+            
+            <div class="shortcuts" id="shortcuts">
+                <h3>Keyboard Shortcuts</h3>
+                <ul>
+                    <li><span class="key">Ctrl+[</span> Toggle Panel</li>
+                    <li><span class="key">Space</span> Fit</li>
+                    <li><span class="key">+/-</span> Zoom</li>
+                    <li><span class="key">0</span> Root Only</li>
+                    <li><span class="key">9</span> Show All</li>
+                    <li><span class="key">1-7</span> Expand Level</li>
+                    <li><span class="key">n</span> Next Node</li>
+                    <li><span class="key">p</span> Previous Node</li>
+                    <li><span class="key">h</span> Parent Node</li>
+                    <li><span class="key">l</span> Child Node</li>
+                    <li><span class="key">j</span> Next Sibling</li>
+                    <li><span class="key">k</span> Prev Sibling</li>
+                    <li><span class="key">.</span> Focus In</li>
+                    <li><span class="key">b</span> Focus Out</li>
+                    <li><span class="key">,</span> Reset</li>
+                </ul>
+            </div>
+
+            <div class="toolbar">
+                <button onclick="fitMap()">Fit</button>
+                <button onclick="zoomIn()">+</button>
+                <button onclick="zoomOut()">-</button>
+                <button onclick="expandAll()">Expand All</button>
+                <button onclick="collapseAll()">Collapse</button>
+                <button onclick="focusIn()">Focus In (.)</button>
+                <button onclick="focusOut()">Focus Out (b)</button>
+                <button onclick="resetFocus()">Reset (,)</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markmap-view@0.15.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.15.4"></script>
+
+    <script>
+        let markmapInstance = null;
+        let currentScale = 1;
+        let transformer = null;
+        let focusHistory = []; // Stack to track focus navigation
+        let originalRoot = null; // Store the original full tree
+        let selectedNodeIndex = 0; // Index of currently selected node
+        let flatNodeList = []; // Flattened list of all visible nodes
+
+        // Initialize markmap after libraries load
+        function initMarkmap() {
+            try {
+                document.getElementById('loading').style.display = 'none';
+                
+                // Access from global window object
+                const { Transformer } = window.markmap;
+                transformer = new Transformer();
+                
+                updateMarkmap();
+            } catch (error) {
+                console.error('Initialization error:', error);
+                document.getElementById('loading').textContent = 'Error loading Markmap: ' + error.message;
+            }
+        }
+
+        function updateMarkmap() {
+            if (!transformer) {
+                console.error('Transformer not initialized');
+                return;
+            }
+
+            try {
+                const markdown = document.getElementById('markdown-input').value;
+                const { root } = transformer.transform(markdown);
+                
+                // Store original root if not already stored
+                if (!originalRoot) {
+                    originalRoot = root;
+                }
+                
+                const svg = document.getElementById('markmap');
+                
+                if (markmapInstance) {
+                    markmapInstance.setData(root);
+                    markmapInstance.fit();
+                    // Add zoom icons after update
+                    setTimeout(() => {
+                        ensureClickHandlers();
+                        addZoomIcons();
+                    }, 700);
+                } else {
+                    const { Markmap } = window.markmap;
+                    markmapInstance = Markmap.create(svg, {
+                        colorFreezeLevel: 2,
+                        duration: 500,
+                        maxWidth: 300,
+                        nodeMinHeight: 30,
+                        spacingVertical: 10,
+                        spacingHorizontal: 80,
+                        paddingX: 10
+                    }, root);
+                    
+                    // Setup click handlers after markmap is created and rendered
+                    setTimeout(() => {
+                        ensureClickHandlers();
+                        addZoomIcons();
+                    }, 700);
+                }
+            } catch (error) {
+                console.error('Update error:', error);
+            }
+        }
+
+        function fitMap() {
+            if (markmapInstance) {
+                markmapInstance.fit();
+                // Re-add icons after fit in case positions changed
+                setTimeout(() => {
+                    ensureClickHandlers();
+                    addZoomIcons();
+                }, 150);
+            }
+        }
+
+        function zoomIn() {
+            if (markmapInstance) {
+                currentScale *= 1.2;
+                markmapInstance.rescale(currentScale);
+                // Re-add icons after zoom
+                setTimeout(() => {
+                    ensureClickHandlers();
+                    addZoomIcons();
+                }, 150);
+            }
+        }
+
+        function zoomOut() {
+            if (markmapInstance) {
+                currentScale *= 0.8;
+                markmapInstance.rescale(currentScale);
+                // Re-add icons after zoom
+                setTimeout(() => {
+                    ensureClickHandlers();
+                    addZoomIcons();
+                }, 150);
+            }
+        }
+
+        function expandAll() {
+            if (!markmapInstance) return;
+            
+            // Get the current root (focused or original)
+            const currentRoot = markmapInstance.state.data;
+            if (!currentRoot) return;
+            
+            const modifiedRoot = JSON.parse(JSON.stringify(currentRoot));
+            
+            function expandNode(node) {
+                if (node.children) {
+                    node.payload = { ...node.payload, fold: 0 };
+                    node.children.forEach(expandNode);
+                }
+            }
+            expandNode(modifiedRoot);
+            
+            markmapInstance.setData(modifiedRoot);
+            markmapInstance.fit();
+            setTimeout(() => {
+                ensureClickHandlers();
+                addZoomIcons();
+            }, 700);
+            
+            // Update history if in focused view
+            if (focusHistory.length > 0) {
+                focusHistory[focusHistory.length - 1] = JSON.parse(JSON.stringify(modifiedRoot));
+            } else if (originalRoot) {
+                originalRoot = JSON.parse(JSON.stringify(modifiedRoot));
+            }
+        }
+
+        function collapseAll() {
+            if (!markmapInstance) return;
+            
+            // Get the current root (focused or original)
+            const currentRoot = markmapInstance.state.data;
+            if (!currentRoot) return;
+            
+            const modifiedRoot = JSON.parse(JSON.stringify(currentRoot));
+            
+            if (modifiedRoot.children) {
+                modifiedRoot.children.forEach(child => {
+                    child.payload = { ...child.payload, fold: 1 };
+                });
+            }
+            
+            markmapInstance.setData(modifiedRoot);
+            markmapInstance.fit();
+            setTimeout(() => {
+                ensureClickHandlers();
+                addZoomIcons();
+            }, 700);
+            
+            // Update history if in focused view
+            if (focusHistory.length > 0) {
+                focusHistory[focusHistory.length - 1] = JSON.parse(JSON.stringify(modifiedRoot));
+            } else if (originalRoot) {
+                originalRoot = JSON.parse(JSON.stringify(modifiedRoot));
+            }
+        }
+
+        // Setup click handlers for nodes
+        function setupClickHandlers() {
+            const svg = document.getElementById('markmap');
+            
+            // Use event delegation on the SVG element
+            svg.removeEventListener('click', svgClickHandler);
+            svg.addEventListener('click', svgClickHandler);
+            svg.removeEventListener('dblclick', svgDblClickHandler);
+            svg.addEventListener('dblclick', svgDblClickHandler);
+            
+            // Add zoom icons to nodes with children
+            addZoomIcons();
+        }
+        
+        let clickHandlersAttached = false;
+        
+        function ensureClickHandlers() {
+            if (!clickHandlersAttached) {
+                const svg = document.getElementById('markmap');
+                svg.addEventListener('click', svgClickHandler);
+                svg.addEventListener('dblclick', svgDblClickHandler);
+                clickHandlersAttached = true;
+            }
+        }
+        
+        function svgClickHandler(event) {
+            // Check if clicking on zoom icon
+            if (event.target.classList.contains('zoom-icon') || event.target.closest('.zoom-icon-clickable')) {
+                event.stopPropagation();
+                const nodeGroup = event.target.closest('g[data-depth]');
+                if (nodeGroup) {
+                    handleNodeFocus(nodeGroup, event);
+                }
+                return;
+            }
+            
+            if (event.ctrlKey || event.metaKey) {
+                const nodeGroup = event.target.closest('g[data-depth]');
+                if (nodeGroup) {
+                    event.stopPropagation();
+                    handleNodeFocus(nodeGroup, event);
+                }
+            }
+        }
+        
+        function svgDblClickHandler(event) {
+            const nodeGroup = event.target.closest('g[data-depth]');
+            if (nodeGroup) {
+                event.stopPropagation();
+                event.preventDefault();
+                handleNodeFocus(nodeGroup, event);
+            }
+        }
+
+        // Add zoom icons to nodes that have children
+        function addZoomIcons() {
+            const svg = document.getElementById('markmap');
+            const allGroups = svg.querySelectorAll('g[data-depth]');
+            
+            // First, remove all existing zoom icons to prevent duplicates
+            svg.querySelectorAll('.zoom-icon-clickable').forEach(icon => icon.remove());
+            
+            allGroups.forEach(group => {
+                // Check if this node has children by looking at the data
+                const nodeData = findNodeDataByElement(group);
+                if (!nodeData || !nodeData.children || nodeData.children.length === 0) {
+                    return; // Skip nodes without children
+                }
+                
+                // Find the foreignObject (text container)
+                const foreignObject = group.querySelector('foreignObject');
+                if (!foreignObject) return;
+                
+                const x = parseFloat(foreignObject.getAttribute('x'));
+                const y = parseFloat(foreignObject.getAttribute('y'));
+                const height = parseFloat(foreignObject.getAttribute('height'));
+                
+                // Create a group for the zoom icon
+                const iconGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                iconGroup.classList.add('zoom-icon-clickable');
+                iconGroup.setAttribute('transform', `translate(${x - 20}, ${y + height/2})`);
+                
+                // Create the zoom icon (magnifying glass with +)
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', '0');
+                circle.setAttribute('cy', '0');
+                circle.setAttribute('r', '6');
+                circle.setAttribute('class', 'zoom-icon');
+                circle.setAttribute('stroke', '#666');
+                circle.setAttribute('stroke-width', '1.5');
+                circle.setAttribute('fill', 'none');
+                
+                const plusH = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                plusH.setAttribute('x1', '-3');
+                plusH.setAttribute('y1', '0');
+                plusH.setAttribute('x2', '3');
+                plusH.setAttribute('y2', '0');
+                plusH.setAttribute('class', 'zoom-icon');
+                plusH.setAttribute('stroke', '#666');
+                plusH.setAttribute('stroke-width', '1.5');
+                
+                const plusV = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                plusV.setAttribute('x1', '0');
+                plusV.setAttribute('y1', '-3');
+                plusV.setAttribute('x2', '0');
+                plusV.setAttribute('y2', '3');
+                plusV.setAttribute('class', 'zoom-icon');
+                plusV.setAttribute('stroke', '#666');
+                plusV.setAttribute('stroke-width', '1.5');
+                
+                iconGroup.appendChild(circle);
+                iconGroup.appendChild(plusH);
+                iconGroup.appendChild(plusV);
+                
+                // Add hover effect for the entire group
+                iconGroup.addEventListener('mouseenter', () => {
+                    circle.setAttribute('stroke', '#0066cc');
+                    plusH.setAttribute('stroke', '#0066cc');
+                    plusV.setAttribute('stroke', '#0066cc');
+                });
+                
+                iconGroup.addEventListener('mouseleave', () => {
+                    circle.setAttribute('stroke', '#666');
+                    plusH.setAttribute('stroke', '#666');
+                    plusV.setAttribute('stroke', '#666');
+                });
+                
+                // Insert the icon before the text
+                group.insertBefore(iconGroup, foreignObject);
+            });
+        }
+
+        // Handle focus on a clicked node
+        function handleNodeFocus(nodeElement, event) {
+            event.stopPropagation();
+            
+            // Find the node data by traversing the tree
+            const nodeData = findNodeDataByElement(nodeElement);
+            
+            if (nodeData) {
+                focusOnSpecificNode(nodeData);
+            }
+        }
+
+        // Find node data in the tree structure by matching the element
+        function findNodeDataByElement(element) {
+            const depth = parseInt(element.getAttribute('data-depth'));
+            
+            // Get the text content to help identify the node
+            const textElement = element.querySelector('foreignObject div');
+            if (!textElement) return null;
+            
+            const nodeText = textElement.textContent.trim();
+            
+            // Search through the current tree to find matching node
+            const currentRoot = markmapInstance.state.data;
+            
+            return findNodeByTextAndDepth(currentRoot, nodeText, depth, 0);
+        }
+
+        // Recursively search for node by text and depth
+        function findNodeByTextAndDepth(node, text, targetDepth, currentDepth) {
+            // Check if current node matches
+            const nodeText = node.content || '';
+            const cleanNodeText = nodeText.replace(/<[^>]*>/g, '').trim();
+            
+            if (currentDepth === targetDepth && cleanNodeText === text) {
+                return node;
+            }
+            
+            // Search children
+            if (node.children) {
+                for (let child of node.children) {
+                    const found = findNodeByTextAndDepth(child, text, targetDepth, currentDepth + 1);
+                    if (found) return found;
+                }
+            }
+            
+            return null;
+        }
+
+        // Handle node clicks for focus functionality
+        function handleMarkmapNodeClick(node, event) {
+            // Double-click to focus on a node
+            if (event.detail === 2) {
+                focusOnSpecificNode(node);
+            }
+            // Ctrl/Cmd + Click to focus
+            else if (event.ctrlKey || event.metaKey) {
+                focusOnSpecificNode(node);
+            }
+        }
+
+        function handleSVGClick(event) {
+            // This is backup - main handling is in handleMarkmapNodeClick
+        }
+
+        function handleNodeClick(event) {
+            // Legacy function - keeping for compatibility
+        }
+
+        // Find node in tree that matches the clicked element
+        function findNodeByElement(node, element) {
+            // This is a simplified version - in production you'd need better node identification
+            // For now, we'll use keyboard shortcuts which is more reliable
+            return null;
+        }
+
+        // Focus on a specific node (show only that node and its children)
+        function focusOnNode(node) {
+            if (!node || !node.children) return;
+            
+            // Save current root to history
+            const currentRoot = markmapInstance.state.data;
+            focusHistory.push(currentRoot);
+            
+            // Create a new root from the focused node
+            const focusedRoot = JSON.parse(JSON.stringify(node));
+            
+            markmapInstance.setData(focusedRoot);
+            markmapInstance.fit();
+        }
+
+        // Focus on a specific clicked node
+        function focusOnSpecificNode(node) {
+            if (!node) return;
+            
+            // First, regenerate the full tree from markdown to ensure we have latest data
+            if (focusHistory.length === 0 && transformer) {
+                const markdown = document.getElementById('markdown-input').value;
+                const { root } = transformer.transform(markdown);
+                originalRoot = root;
+            }
+            
+            // Save current root to history
+            const currentRoot = markmapInstance.state.data;
+            focusHistory.push(JSON.parse(JSON.stringify(currentRoot)));
+            
+            // Create a new root from the clicked node
+            const focusedRoot = JSON.parse(JSON.stringify(node));
+            
+            // Update the markmap with the new focused view
+            markmapInstance.setData(focusedRoot);
+            markmapInstance.fit();
+            
+            // Wait for animation to complete before adding icons
+            setTimeout(() => {
+                ensureClickHandlers();
+                addZoomIcons();
+            }, 700);
+        }
+
+        // Focus out to parent level
+        function focusOut() {
+            if (focusHistory.length > 0) {
+                const previousRoot = focusHistory.pop();
+                markmapInstance.setData(previousRoot);
+                markmapInstance.fit();
+                // Ensure icons are added after animation completes
+                setTimeout(() => {
+                    ensureClickHandlers();
+                    addZoomIcons();
+                }, 700);
+            } else {
+                // No more history, regenerate from current markdown
+                resetFocus();
+            }
+        }
+
+        // Reset to original full tree
+        function resetFocus() {
+            if (!transformer) return;
+            
+            // Regenerate from current markdown input
+            const markdown = document.getElementById('markdown-input').value;
+            const { root } = transformer.transform(markdown);
+            
+            // Clear focus history
+            focusHistory = [];
+            originalRoot = root;
+            
+            markmapInstance.setData(root);
+            markmapInstance.fit();
+            // Ensure icons are added after animation completes
+            setTimeout(() => {
+                ensureClickHandlers();
+                addZoomIcons();
+            }, 700);
+        }
+
+        // Get currently selected/hovered node
+        let selectedNode = null;
+        let hoveredNodeData = null;
+        
+        function setupNodeSelection() {
+            const svg = document.getElementById('markmap');
+            
+            // Track which node is being hovered
+            svg.addEventListener('mouseover', (e) => {
+                const gNode = e.target.closest('g[data-depth]');
+                if (gNode) {
+                    // Store reference to the DOM element
+                    hoveredNodeData = gNode;
+                }
+            });
+        }
+
+        // Focus in to the first child of current root or hovered node
+        function focusIn() {
+            const currentRoot = markmapInstance.state.data;
+            
+            // If we have children, focus on the first child
+            if (currentRoot && currentRoot.children && currentRoot.children.length > 0) {
+                // Ensure we have the latest data before focusing in
+                if (focusHistory.length === 0 && transformer) {
+                    const markdown = document.getElementById('markdown-input').value;
+                    const { root } = transformer.transform(markdown);
+                    originalRoot = root;
+                    
+                    // Save current full state
+                    focusHistory.push(JSON.parse(JSON.stringify(root)));
+                } else {
+                    // Save current state to history
+                    focusHistory.push(JSON.parse(JSON.stringify(currentRoot)));
+                }
+                
+                // Focus on first child
+                const firstChild = currentRoot.children[0];
+                const focusedRoot = JSON.parse(JSON.stringify(firstChild));
+                
+                markmapInstance.setData(focusedRoot);
+                markmapInstance.fit();
+                
+                // Wait for animation to complete before adding icons
+                setTimeout(() => {
+                    ensureClickHandlers();
+                    addZoomIcons();
+                }, 700);
+            }
+        }
+
+        // Expand to a specific level (1-7)
+        function expandToLevel(level) {
+            if (!markmapInstance) return;
+            
+            // Get the current root (which may be a focused subtree)
+            const currentRoot = markmapInstance.state.data;
+            if (!currentRoot) return;
+            
+            // Clone the current root to modify
+            const modifiedRoot = JSON.parse(JSON.stringify(currentRoot));
+            
+            // Set fold state based on depth relative to current root
+            function setFoldByLevel(node, currentLevel) {
+                if (currentLevel < level) {
+                    // Expand nodes below target level
+                    node.payload = { ...node.payload, fold: 0 };
+                    if (node.children) {
+                        node.children.forEach(child => setFoldByLevel(child, currentLevel + 1));
+                    }
+                } else {
+                    // Collapse nodes at or beyond target level
+                    node.payload = { ...node.payload, fold: 1 };
+                }
+            }
+            
+            // Start from level 0 (current root)
+            if (modifiedRoot.children) {
+                modifiedRoot.children.forEach(child => setFoldByLevel(child, 1));
+            }
+            
+            // Update the markmap with modified root
+            markmapInstance.setData(modifiedRoot);
+            markmapInstance.fit();
+            setTimeout(() => {
+                ensureClickHandlers();
+                addZoomIcons();
+            }, 700);
+            
+            // Update the focus history if we're in a focused view
+            if (focusHistory.length > 0) {
+                // Replace the last history item with the current state
+                focusHistory[focusHistory.length - 1] = JSON.parse(JSON.stringify(modifiedRoot));
+            } else if (originalRoot && currentRoot !== originalRoot) {
+                // Update original root if we're viewing it
+                originalRoot = JSON.parse(JSON.stringify(modifiedRoot));
+            }
+        }
+
+        // Build a flat list of all visible nodes for traversal
+        function buildFlatNodeList(node, list = [], parentNode = null) {
+            list.push({ node, parent: parentNode });
+            
+            // Only include children if node is not folded
+            if (node.children && (!node.payload || !node.payload.fold)) {
+                node.children.forEach(child => buildFlatNodeList(child, list, node));
+            }
+            
+            return list;
+        }
+
+        // Highlight a node visually
+        function highlightNode(node) {
+            if (!node) return;
+            
+            const svg = document.getElementById('markmap');
+            
+            // Remove previous highlights
+            svg.querySelectorAll('.node-highlight').forEach(el => el.remove());
+            
+            // Find the node in DOM and add highlight
+            const allGroups = svg.querySelectorAll('g[data-depth]');
+            allGroups.forEach(group => {
+                const textElement = group.querySelector('foreignObject div');
+                if (textElement) {
+                    const nodeText = textElement.textContent.trim();
+                    const targetText = (node.content || '').replace(/<[^>]*>/g, '').trim();
+                    
+                    if (nodeText === targetText) {
+                        // Add highlight circle
+                        const circle = group.querySelector('circle');
+                        if (circle) {
+                            const highlight = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                            const cx = circle.getAttribute('cx');
+                            const cy = circle.getAttribute('cy');
+                            const r = parseFloat(circle.getAttribute('r')) + 5;
+                            
+                            highlight.setAttribute('cx', cx);
+                            highlight.setAttribute('cy', cy);
+                            highlight.setAttribute('r', r);
+                            highlight.setAttribute('fill', 'none');
+                            highlight.setAttribute('stroke', '#0066cc');
+                            highlight.setAttribute('stroke-width', '3');
+                            highlight.classList.add('node-highlight');
+                            
+                            circle.parentNode.insertBefore(highlight, circle);
+                        }
+                    }
+                }
+            });
+        }
+
+        // Traverse to next node (depth-first)
+        function traverseNext() {
+            const currentRoot = markmapInstance.state.data;
+            flatNodeList = buildFlatNodeList(currentRoot);
+            
+            selectedNodeIndex = (selectedNodeIndex + 1) % flatNodeList.length;
+            highlightNode(flatNodeList[selectedNodeIndex].node);
+        }
+
+        // Traverse to previous node
+        function traversePrevious() {
+            const currentRoot = markmapInstance.state.data;
+            flatNodeList = buildFlatNodeList(currentRoot);
+            
+            selectedNodeIndex = (selectedNodeIndex - 1 + flatNodeList.length) % flatNodeList.length;
+            highlightNode(flatNodeList[selectedNodeIndex].node);
+        }
+
+        // Traverse to parent node
+        function traverseParent() {
+            const currentRoot = markmapInstance.state.data;
+            flatNodeList = buildFlatNodeList(currentRoot);
+            
+            if (flatNodeList[selectedNodeIndex]) {
+                const parent = flatNodeList[selectedNodeIndex].parent;
+                if (parent) {
+                    // Find parent index in flat list
+                    const parentIndex = flatNodeList.findIndex(item => item.node === parent);
+                    if (parentIndex !== -1) {
+                        selectedNodeIndex = parentIndex;
+                        highlightNode(flatNodeList[selectedNodeIndex].node);
+                    }
+                }
+            }
+        }
+
+        // Traverse to first child node
+        function traverseChild() {
+            const currentRoot = markmapInstance.state.data;
+            flatNodeList = buildFlatNodeList(currentRoot);
+            
+            if (flatNodeList[selectedNodeIndex]) {
+                const currentNode = flatNodeList[selectedNodeIndex].node;
+                if (currentNode.children && currentNode.children.length > 0 && (!currentNode.payload || !currentNode.payload.fold)) {
+                    // Find first child in flat list
+                    const childIndex = flatNodeList.findIndex(item => item.node === currentNode.children[0]);
+                    if (childIndex !== -1) {
+                        selectedNodeIndex = childIndex;
+                        highlightNode(flatNodeList[selectedNodeIndex].node);
+                    }
+                }
+            }
+        }
+
+        // Traverse to next sibling
+        function traverseNextSibling() {
+            const currentRoot = markmapInstance.state.data;
+            flatNodeList = buildFlatNodeList(currentRoot);
+            
+            if (flatNodeList[selectedNodeIndex]) {
+                const parent = flatNodeList[selectedNodeIndex].parent;
+                const currentNode = flatNodeList[selectedNodeIndex].node;
+                
+                if (parent && parent.children) {
+                    const currentSiblingIndex = parent.children.indexOf(currentNode);
+                    if (currentSiblingIndex !== -1 && currentSiblingIndex < parent.children.length - 1) {
+                        const nextSibling = parent.children[currentSiblingIndex + 1];
+                        const siblingIndex = flatNodeList.findIndex(item => item.node === nextSibling);
+                        if (siblingIndex !== -1) {
+                            selectedNodeIndex = siblingIndex;
+                            highlightNode(flatNodeList[selectedNodeIndex].node);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Traverse to previous sibling
+        function traversePreviousSibling() {
+            const currentRoot = markmapInstance.state.data;
+            flatNodeList = buildFlatNodeList(currentRoot);
+            
+            if (flatNodeList[selectedNodeIndex]) {
+                const parent = flatNodeList[selectedNodeIndex].parent;
+                const currentNode = flatNodeList[selectedNodeIndex].node;
+                
+                if (parent && parent.children) {
+                    const currentSiblingIndex = parent.children.indexOf(currentNode);
+                    if (currentSiblingIndex > 0) {
+                        const prevSibling = parent.children[currentSiblingIndex - 1];
+                        const siblingIndex = flatNodeList.findIndex(item => item.node === prevSibling);
+                        if (siblingIndex !== -1) {
+                            selectedNodeIndex = siblingIndex;
+                            highlightNode(flatNodeList[selectedNodeIndex].node);
+                        }
+                    }
+                }
+            }
+        }
+
+        function findNodeByPath(root, element) {
+            // Simplified - traverse tree to find matching node
+            const depth = element.getAttribute('data-depth');
+            // This would need proper implementation based on Markmap's internal structure
+            return null;
+        }
+
+        function toggleShortcuts() {
+            const shortcuts = document.getElementById('shortcuts');
+            shortcuts.classList.toggle('active');
+        }
+
+        function exportSVG() {
+            const svg = document.getElementById('markmap');
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const blob = new Blob([svgData], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'markmap.svg';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'TEXTAREA') return;
+
+            switch(e.key) {
+                case ' ':
+                    e.preventDefault();
+                    fitMap();
+                    break;
+                case '+':
+                case '=':
+                    e.preventDefault();
+                    zoomIn();
+                    break;
+                case '-':
+                case '_':
+                    e.preventDefault();
+                    zoomOut();
+                    break;
+                case '9':
+                    e.preventDefault();
+                    expandAll();
+                    break;
+                case '0':
+                    e.preventDefault();
+                    collapseAll();
+                    break;
+                case '.':
+                    e.preventDefault();
+                    focusIn();
+                    break;
+                case ',':
+                    e.preventDefault();
+                    resetFocus();
+                    break;
+                case 'b':
+                    e.preventDefault();
+                    focusOut();
+                    break;
+                case '1':
+                    e.preventDefault();
+                    expandToLevel(1);
+                    break;
+                case '2':
+                    e.preventDefault();
+                    expandToLevel(2);
+                    break;
+                case '3':
+                    e.preventDefault();
+                    expandToLevel(3);
+                    break;
+                case '4':
+                    e.preventDefault();
+                    expandToLevel(4);
+                    break;
+                case '5':
+                    e.preventDefault();
+                    expandToLevel(5);
+                    break;
+                case '6':
+                    e.preventDefault();
+                    expandToLevel(6);
+                    break;
+                case '7':
+                    e.preventDefault();
+                    expandToLevel(7);
+                    break;
+                case 'n':
+                    e.preventDefault();
+                    traverseNext();
+                    break;
+                case 'p':
+                    e.preventDefault();
+                    traversePrevious();
+                    break;
+                case 'h':
+                    e.preventDefault();
+                    traverseParent();
+                    break;
+                case 'l':
+                    e.preventDefault();
+                    traverseChild();
+                    break;
+                case 'j':
+                    e.preventDefault();
+                    traverseNextSibling();
+                    break;
+                case 'k':
+                    e.preventDefault();
+                    traversePreviousSibling();
+                    break;
+                case '[':
+                    if (e.ctrlKey || e.metaKey) {
+                        e.preventDefault();
+                        toggleEditorPanel();
+                    }
+                    break;
+            }
+        });
+
+        // Auto-update on input (debounced)
+        let updateTimeout;
+        document.getElementById('markdown-input').addEventListener('input', () => {
+            clearTimeout(updateTimeout);
+            updateTimeout = setTimeout(updateMarkmap, 500);
+        });
+
+        // Wait for all scripts to load
+        window.addEventListener('load', () => {
+            // Give a small delay to ensure all CDN scripts are loaded
+            setTimeout(() => {
+                initMarkmap();
+                setupNodeSelection();
+            }, 100);
+        });
+
+        // Toggle editor panel visibility
+        function toggleEditorPanel() {
+            const panel = document.getElementById('editor-panel');
+            const btn = document.getElementById('toggle-panel-btn');
+            
+            panel.classList.toggle('collapsed');
+            
+            if (panel.classList.contains('collapsed')) {
+                btn.innerHTML = '▶';
+                btn.title = 'Show Editor Panel';
+            } else {
+                btn.innerHTML = '◀';
+                btn.title = 'Hide Editor Panel';
+            }
+            
+            // Re-fit the markmap after panel toggle
+            setTimeout(() => {
+                if (markmapInstance) {
+                    markmapInstance.fit();
+                }
+            }, 300);
+        }
+    </script>
+</body>
+</html>
