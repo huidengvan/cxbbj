@@ -1,0 +1,11 @@
+{{ $path := .Get "path" }}
+{{ $files := readDir (printf "static/%s" $path) }}
+<ul>
+  {{ range sort $files ".Name" }}
+    {{ if not .IsDir }}
+      <li>
+        <a href="/{{ $path }}/{{ .Name }}">{{ .Name }}</a>
+      </li>
+    {{ end }}
+  {{ end }}
+</ul>
