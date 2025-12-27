@@ -1,0 +1,31 @@
+{{- $name := .Get 0 -}}
+{{- $res := .Page.Resources.GetMatch $name -}}
+
+{{ if not $res }}
+  {{ with .Page.Parent }}
+    {{ $res = .Resources.GetMatch $name }}
+  {{ end }}
+{{ end }}
+
+{{- if not $res -}}
+  {{ errorf "SRT file not found: %s" $name }}
+{{- end -}}
+
+<!-- {{ $res.Content | safeHTML}} -->
+
+{{ $subtitleLines := findRE `(?s).*?(?:\r?\n\r?\n|$)` $res.Content }}
+
+{{ range $subtitleLines }}
+
+  {{ $subline := findRE `(?m)^[^\r\n]+` . }}
+
+  {{ $parts := split (index $subline 1) " --> " }}
+  
+
+  {{ index $subline 0 }} | {{ index $parts 0 }} {{ index $subline 2 | safeHTML}}
+  {{ range $subline }}
+  
+    <!-- {{ . | safeHTML}} -->
+  {{ end }}
+  <br>
+{{ end }}
