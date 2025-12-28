@@ -44,9 +44,11 @@ function parseTime(timeString) {
 {{- end -}}
 
 {{ with $res }}
+<li style="font-size: 60%;">以下文本是用OCR识别视频中的硬字幕生成的，如有错漏，您可以下载字幕文件，帮助校对修改，然后反馈给huidengvan@gmail.com
   <a href="{{ .RelPermalink }}" download>
+    
     Download subtitle .srt file（下载字幕文件）
-  </a>
+  </a></li>
   <hr/>
 {{ end }}
 
