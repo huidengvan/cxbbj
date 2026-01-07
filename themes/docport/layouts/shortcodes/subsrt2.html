@@ -1,0 +1,90 @@
+<!-- 密法课程的字幕使用 subsrt2 shorcode -->
+ 
+<!-- Video part -->
+<script>
+function parseTime(timeString) {
+    if (!timeString) return timeString
+
+    if (timeString?.split(':').length == 1) {
+        return parseInt(timeString)
+    }
+
+    if (timeString?.split(':').length == 2) {
+        timeString = '00:' + timeString
+    }
+    const parts = timeString?.split(':');
+    const hours = parseInt(parts[0], 10);
+    const minutes = parseInt(parts[1], 10);
+    const seconds = parseFloat(parts[2]?.replace(',', '.'));
+    return hours * 3600 + minutes * 60 + (seconds || 0);
+};
+</script>
+
+<details class="hugo-toggle">
+  <summary><b>本课为密法课程，要求得受正式灌顶者，方可观看。请确认您已得受过正式的灌顶！</b>
+<br/>我已经达到该次第，让我继续观看</summary>
+  <div>
+
+<div>
+<video  controls id="myvideo-01" style="width: 100%;">
+            
+    <source src='{{.Get "video-url"}}' type="video/mp4" crossorigin="anonymous" preload="auto">
+    Your browser does not support the video tag.
+  </audio>
+  <div>
+    <a onclick="vid = document.getElementById('myvideo-01');vid.src={{.Get "video-url"}};vid.currentTime = {{.Get "playpos"}};vid.play();" >{{.Get "video-title"}}</a>
+  </div>
+</div>
+  
+
+<!-- Subtitle part -->
+{{- $name := .Get "srt-file" -}}
+{{- $res := .Page.Resources.GetMatch $name -}}
+
+{{ if not $res }}
+  {{ with .Page.Parent }}
+    {{ $res = .Resources.GetMatch $name }}
+  {{ end }}
+{{ end }}
+
+{{- if not $res -}}
+  {{ errorf "SRT file not found: %s" $name }}
+{{- end -}}
+
+{{ with $res }}
+<li style="font-size: 60%;">以下文本是用OCR识别视频中的硬字幕生成的，如有错漏，您可以下载字幕文件，帮助校对修改，然后反馈给huidengvan@gmail.com
+  <a href="{{ .RelPermalink }}" download>
+    
+    Download subtitle .srt file（下载字幕文件）
+  </a></li>
+  <hr/>
+{{ end }}
+
+<!-- {{ $res.Content | safeHTML}} -->
+
+{{ $subtitleLines := findRE `(?s).*?(?:\r?\n\r?\n|$)` $res.Content }}
+
+{{ range $subtitleLines }}
+
+    {{ $subline := findRE `(?m)^[^\r\n]+` . }}
+
+    {{ $parts := split (index $subline 1) " --> " }}
+    
+    <p style="padding: 0pt; margin: 0pt">
+    <!-- {{ index $parts 0 }}  -->
+    <span title='点击播放当前位置' style="cursor: pointer;  text-decoration: underline; font-size: 60%;"
+        onclick="vid = document.getElementById('myvideo-01');vid.currentTime=parseTime({{ index $parts 0 }});
+        vid.scrollIntoView({
+            behavior: 'smooth',   // or 'auto'
+            block: 'center',      // 'start' | 'center' | 'end' | 'nearest'
+            inline: 'nearest'
+            });">
+        {{ index (split (index $parts 0) ",") 0 }}
+    </span>
+
+    {{ index $subline 2 | safeHTML}}
+  
+    </p>
+{{ end }}
+</div>
+</details>
