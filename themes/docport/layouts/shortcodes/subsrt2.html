@@ -52,7 +52,7 @@ function parseTime(timeString) {
 {{- end -}}
 
 {{ with $res }}
-<li style="font-size: 60%;">以下文本是用OCR识别视频中的硬字幕生成的，如有错漏，您可以下载字幕文件，帮助校对修改，然后反馈给huidengvan@gmail.com
+<li style="font-size: 60%;">以下文本是用OCR技术识别视频中的硬字幕生成的，如有错漏，您可以下载字幕文件，帮助校对修改，然后反馈给huidengvan@gmail.com
   <a href="{{ .RelPermalink }}" download>
     
     Download subtitle .srt file（下载字幕文件）
@@ -73,12 +73,15 @@ function parseTime(timeString) {
     <p style="padding: 0pt; margin: 0pt">
     <!-- {{ index $parts 0 }}  -->
     <span title='点击播放当前位置' style="cursor: pointer;  text-decoration: underline; font-size: 60%;"
-        onclick="vid = document.getElementById('myvideo-01');vid.currentTime=parseTime({{ index $parts 0 }});
-        vid.scrollIntoView({
-            behavior: 'smooth',   // or 'auto'
-            block: 'center',      // 'start' | 'center' | 'end' | 'nearest'
-            inline: 'nearest'
-            });">
+        onclick="const vid = document.querySelector('video');vid.currentTime=parseTime({{ index $parts 0 }});
+        if (!document.pictureInPictureElement) {
+          vid.scrollIntoView({
+              behavior: 'auto',   // or 'auto', 'smooth'
+              block: 'center',      // 'start' | 'center' | 'end' | 'nearest'
+              inline: 'nearest'
+              });
+            }
+            ">
         {{ index (split (index $parts 0) ",") 0 }}
     </span>
 
