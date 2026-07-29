@@ -30,7 +30,7 @@ function parseTime(timeString) {
             
     <source src='{{.Get "video-url"}}' type="video/mp4" crossorigin="anonymous" preload="auto">
     Your browser does not support the video tag.
-  </audio>
+</video>
   <div>
     <a onclick="vid = document.getElementById('myvideo-01');vid.src={{.Get "video-url"}};vid.currentTime = {{.Get "playpos"}};vid.play();" >{{.Get "video-title"}}</a>
   </div>
