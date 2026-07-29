@@ -15,15 +15,10 @@
   {{if ne $redirectURL "" }}
   <meta http-equiv="refresh" content="0;{{ $redirectURL }}">
   {{end}}
-  <link href="{{ .Site.BaseURL }}pagefind/pagefind-ui.css" rel="stylesheet">
-  <script src="{{ .Site.BaseURL }}pagefind/pagefind-ui.js"></script>
+  
 </head>
 <div id="search"></div>
-<script>
-  window.addEventListener('DOMContentLoaded', (event) => {
-    new PagefindUI({ element: "#search", showSubResults: true });
-  });
-</script>
+
 
 <body data-url="{{ .RelPermalink }}" class="
   {{- with .Params.render}}render_{{.}} {{end -}}
